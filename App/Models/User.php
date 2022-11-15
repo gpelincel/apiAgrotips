@@ -5,12 +5,13 @@ namespace App\Models;
 class User
 {
     private static $table = 'users';
+    private static $table_cat = 'categories';
 
     public static function login(string $email, string $password)
     {
         $connPDO = new \PDO(DBDRIVE . ':hostname=' . DBHOST . ';dbname=' . DBNAME, DBUSER, DBPASS);
 
-        $sqlLogin = "SELECT * FROM " . self::$table . " WHERE email = :email AND password = :password";
+        $sqlLogin = "SELECT * FROM " . self::$table . " INNER JOIN ". self::$table_cat ." ON ". self::$table_cat .".id_category = ". self::$table .".id_category WHERE email = :email AND password = :password";
         $stmt = $connPDO->prepare($sqlLogin);
         $stmt->bindValue(':email', $email);
         $stmt->bindValue(':password', sha1($password));
